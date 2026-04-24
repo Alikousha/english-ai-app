@@ -8,20 +8,16 @@
 
 <style>
 
-/* 🌈 BASE */
 body{
     margin:0;
     font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-
     background: linear-gradient(135deg, #ffffff 0%, #ffe6e6 40%, #ff4d4d 100%);
-
     display:flex;
     justify-content:center;
     align-items:center;
     height:100vh;
 }
 
-/* glow background */
 body::before{
     content:"";
     position:fixed;
@@ -33,13 +29,11 @@ body::before{
     pointer-events:none;
 }
 
-/* HEADER */
 .header{
     position:absolute;
     top:15px;
     text-align:center;
     width:100%;
-    z-index:5;
 }
 
 .title{
@@ -53,66 +47,52 @@ body::before{
     color:#444;
 }
 
-/* LOGO */
 .logo-bg{
     position:absolute;
     top:-120px;
     width:100%;
     display:flex;
     justify-content:center;
-    opacity:0.10;
-    z-index:1;
+    opacity:0.1;
 }
 
 .logo-bg img{
     width:300px;
 }
 
-/* 🧊 GLASS CARD (BIG UPGRADE) */
 .card{
-    background: rgba(255,255,255,0.88);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.4);
-
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(10px);
     width:380px;
     padding:22px;
     border-radius:24px;
-
     text-align:center;
     box-shadow:0 25px 60px rgba(0,0,0,0.25);
-
     z-index:10;
-    max-height:90vh;
-    overflow:auto;
 }
 
-/* WORD */
 .word{
     font-size:22px;
-    font-weight:700;
+    font-weight:bold;
     margin:18px 0;
 }
 
-/* 🔘 OPTIONS (DUOLINGO STYLE) */
 button.option{
     width:100%;
     padding:14px;
-    margin:7px 0;
+    margin:6px 0;
     border:none;
     border-radius:14px;
     background:#f5f5f5;
     cursor:pointer;
     transition:0.25s;
-    font-size:15px;
 }
 
 button.option:hover{
-    background: linear-gradient(135deg,#ff4d4d,#ff1a1a);
+    background:#ff4d4d;
     color:white;
-    transform:scale(1.02);
 }
 
-/* TOP SELECT */
 .top{
     display:flex;
     justify-content:space-between;
@@ -125,36 +105,31 @@ select{
     border-radius:8px;
 }
 
-/* XP SYSTEM */
 .xp{
     margin-top:10px;
     color:#ff4d4d;
     font-weight:bold;
 }
 
-/* XP BAR (NEW) */
 .bar{
     width:100%;
     height:8px;
     background:#eee;
     border-radius:10px;
     margin-top:10px;
-    overflow:hidden;
 }
 
 .bar-fill{
     height:100%;
     width:0%;
-    background:linear-gradient(90deg,#ff4d4d,#ff0000);
+    background:#ff4d4d;
     transition:0.3s;
 }
 
-/* EXAMS */
 .exam-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
-    margin-top:15px;
 }
 
 .exam-btn{
@@ -163,40 +138,16 @@ select{
     border-radius:12px;
     background:#ff4d4d;
     color:white;
-    font-weight:bold;
 }
 
-/* ANIMATIONS */
-.correct{
-    animation:pop 0.3s ease;
-}
-
-@keyframes pop{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.1);}
-    100%{transform:scale(1);}
-}
-
-/* 📱 MOBILE */
 @media (max-width:768px){
-
     body{
         align-items:flex-start;
         padding-top:70px;
     }
-
     .card{
         width:94%;
     }
-
-    .title{
-        font-size:16px;
-    }
-
-    .word{
-        font-size:19px;
-    }
-
     .exam-grid{
         grid-template-columns:1fr;
     }
@@ -243,19 +194,14 @@ select{
 </div>
 
 <div class="word" id="word">Loading...</div>
-
 <div id="options"></div>
 
 <div class="bar"><div class="bar-fill" id="bar"></div></div>
-
 <div class="xp" id="xp">XP: 0</div>
 
 <div id="examSection" style="display:none;margin-top:15px;">
-
 <h3>LGS Exams</h3>
-
 <div class="exam-grid">
-
 <button class="exam-btn" onclick="openExam('2018')">2018</button>
 <button class="exam-btn" onclick="openExam('2019')">2019</button>
 <button class="exam-btn" onclick="openExam('2020')">2020</button>
@@ -264,9 +210,7 @@ select{
 <button class="exam-btn" onclick="openExam('2023')">2023</button>
 <button class="exam-btn" onclick="openExam('2024')">2024</button>
 <button class="exam-btn" onclick="openExam('2025')">2025</button>
-
 </div>
-
 </div>
 
 </div>
@@ -297,6 +241,19 @@ function openExam(y){
 window.open(examLinks[y],"_blank");
 }
 
+/* 🔥 RETRY SYSTEM */
+async function fetchWithRetry(url, retries=5, delay=3000){
+    try{
+        let res = await fetch(url);
+        if(!res.ok) throw new Error("fail");
+        return await res.json();
+    }catch(e){
+        if(retries===0) throw e;
+        await new Promise(r=>setTimeout(r,delay));
+        return fetchWithRetry(url,retries-1,delay);
+    }
+}
+
 async function loadQ(){
 
 let mode=document.getElementById("mode").value;
@@ -314,8 +271,10 @@ if(mode==="practice"){
 
 let unit=document.getElementById("unit").value;
 
-let res=await fetch(`https://english-ai-app-n3i0.onrender.com/question?unit=${unit}`);
-let data=await res.json();
+document.getElementById("word").innerText="⏳ Waking up server...";
+
+try{
+let data=await fetchWithRetry(`https://english-ai-app-n3i0.onrender.com/question?unit=${unit}`);
 
 document.getElementById("word").innerText=data.word;
 correct=data.correct;
@@ -326,6 +285,10 @@ html+=`<button class="option" onclick="check('${o}')">${o}</button>`;
 });
 
 document.getElementById("options").innerHTML=html;
+
+}catch{
+document.getElementById("word").innerText="⚠️ Server not responding. Try again.";
+}
 
 }else{
 
@@ -345,15 +308,9 @@ document.getElementById("options").innerHTML=html;
 
 function check(a){
 
-let bar=document.getElementById("bar");
-
 if(a===correct){
 xp+=10;
-bar.style.width=xp+"%";
-
-document.body.classList.add("correct");
-setTimeout(()=>document.body.classList.remove("correct"),300);
-
+document.getElementById("bar").style.width=xp+"%";
 alert("Correct!");
 }else{
 alert("Wrong!");
