@@ -264,7 +264,7 @@ if(mode === "practice"){
 
 let unit = document.getElementById("unit").value;
 
-let res = await fetch(`http://127.0.0.1:8000/question?unit=${unit}`);
+let res = await fetch(`https://english-ai-app-n3i0.onrender.com/question?unit=${unit}`);
 let data = await res.json();
 
 document.getElementById("word").innerText = data.word;
