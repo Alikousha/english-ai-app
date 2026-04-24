@@ -3,13 +3,18 @@
 
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>English Game</title>
 
 <style>
+
 body{
     margin:0;
     font-family:Arial;
-    background: radial-gradient(circle at top,#58cc02,#1e1e2f);
+
+    /* 🔴 NEW RED + WHITE PROFESSIONAL BACKGROUND */
+    background: linear-gradient(135deg, #ffffff 0%, #ffebee 45%, #ff5252 100%);
+
     display:flex;
     justify-content:center;
     align-items:center;
@@ -17,7 +22,21 @@ body{
     overflow:hidden;
 }
 
-/* HEADER (TOP LAYER) */
+/* 🔴 SOFT BACKGROUND DECORATION */
+body::before{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255,0,0,0.08), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255,0,0,0.06), transparent 40%);
+    pointer-events:none;
+}
+
+/* HEADER */
 .header{
     position:absolute;
     top:15px;
@@ -29,25 +48,24 @@ body{
 .title{
     font-size:22px;
     font-weight:bold;
-    color:white;
+    color:#b30000;
 }
 
 .subtitle{
     font-size:12px;
-    color:#e0e0e0;
+    color:#444;
 }
 
-/* LOGO (FIXED: HIGH + BEHIND HEADER BUT ABOVE BACKGROUND) */
+/* LOGO */
 .logo-bg{
     position:absolute;
-    top:-120px;   /* 🔥 VERY HIGH NOW */
+    top:-120px;
     width:100%;
     display:flex;
     justify-content:center;
     pointer-events:none;
-
     opacity:0.10;
-    z-index:1;   /* above background */
+    z-index:1;
     animation: floatLogo 6s ease-in-out infinite;
 }
 
@@ -56,26 +74,24 @@ body{
     filter: blur(0.7px);
 }
 
-/* FLOAT ANIMATION */
 @keyframes floatLogo{
-    0%   { transform: translateY(0px); opacity:0.08; }
-    50%  { transform: translateY(-12px); opacity:0.12; }
-    100% { transform: translateY(0px); opacity:0.08; }
+    0%{transform:translateY(0px); opacity:0.08;}
+    50%{transform:translateY(-12px); opacity:0.12;}
+    100%{transform:translateY(0px); opacity:0.08;}
 }
 
-/* CARD (ON TOP OF EVERYTHING) */
+/* CARD */
 .card{
     background:white;
     padding:25px;
     border-radius:20px;
     width:380px;
     text-align:center;
-    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+    box-shadow:0 20px 40px rgba(0,0,0,0.2);
     max-height:90vh;
     overflow:auto;
-
     position:relative;
-    z-index:10;   /* 🔥 ALWAYS ABOVE LOGO */
+    z-index:10;
 }
 
 .word{
@@ -95,7 +111,7 @@ button.option{
 }
 
 button.option:hover{
-    background:#58cc02;
+    background:#ff5252;
     color:white;
 }
 
@@ -113,11 +129,11 @@ select{
 
 .xp{
     margin-top:10px;
-    color:#58cc02;
+    color:#ff5252;
     font-weight:bold;
 }
 
-/* EXAM GRID */
+/* EXAMS */
 .exam-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -129,34 +145,83 @@ select{
     padding:12px;
     border:none;
     border-radius:12px;
-    background:#2ecc71;
+    background:#ff5252;
     color:white;
     font-weight:bold;
     cursor:pointer;
 }
 
 .exam-btn:hover{
-    background:#27ae60;
-    transform:scale(1.05);
+    background:#c62828;
 }
+
+/* 📱 MOBILE FIX */
+@media (max-width:768px){
+
+    body{
+        align-items:flex-start;
+        padding-top:90px;
+        overflow:auto;
+    }
+
+    .header{
+        position:relative;
+        top:0;
+        margin-bottom:10px;
+    }
+
+    .title{
+        font-size:18px;
+    }
+
+    .subtitle{
+        font-size:11px;
+    }
+
+    .logo-bg{
+        top:-180px;
+        opacity:0.06;
+    }
+
+    .logo-bg img{
+        width:220px;
+    }
+
+    .card{
+        width:92%;
+        padding:15px;
+        border-radius:15px;
+    }
+
+    .word{
+        font-size:18px;
+    }
+
+    button.option{
+        font-size:14px;
+        padding:10px;
+    }
+
+    .exam-grid{
+        grid-template-columns:1fr;
+    }
+}
+
 </style>
 
 </head>
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
     <div class="title">CAHİT ARF EĞİTİM KURUMLARI</div>
     <div class="subtitle">This app is produced by Ali Kousha</div>
 </div>
 
-<!-- LOGO (NOW HIGH & FIXED) -->
 <div class="logo-bg">
     <img src="logo.png" alt="logo">
 </div>
 
-<!-- CARD -->
 <div class="card">
 
 <div class="top">
@@ -215,21 +280,9 @@ let correct = "";
 let xp = 0;
 
 const quizData = [
-{
-question: "She ____ to school every day.",
-options: ["go", "goes", "going", "gone"],
-correct: "goes"
-},
-{
-question: "I ____ my homework yesterday.",
-options: ["do", "did", "done", "doing"],
-correct: "did"
-},
-{
-question: "They ____ playing football now.",
-options: ["is", "are", "was", "be"],
-correct: "are"
-}
+{question:"She ____ to school every day.",options:["go","goes","going","gone"],correct:"goes"},
+{question:"I ____ my homework yesterday.",options:["do","did","done","doing"],correct:"did"},
+{question:"They ____ playing football now.",options:["is","are","was","be"],correct:"are"}
 ];
 
 const examLinks = {
@@ -249,60 +302,57 @@ window.open(examLinks[y], "_blank");
 
 async function loadQ(){
 
-let mode = document.getElementById("mode").value;
+let mode=document.getElementById("mode").value;
 
-document.getElementById("examSection").style.display =
-(mode === "exams") ? "block" : "none";
+document.getElementById("examSection").style.display=
+(mode==="exams")?"block":"none";
 
-if(mode === "exams"){
-document.getElementById("word").innerText = "Select exam 👇";
-document.getElementById("options").innerHTML = "";
+if(mode==="exams"){
+document.getElementById("word").innerText="Select exam 👇";
+document.getElementById("options").innerHTML="";
 return;
 }
 
-if(mode === "practice"){
+if(mode==="practice"){
 
-let unit = document.getElementById("unit").value;
+let unit=document.getElementById("unit").value;
 
-let res = await fetch(`https://english-ai-app-n3i0.onrender.com/question?unit=${unit}`);
-let data = await res.json();
+let res=await fetch(`https://english-ai-app-n3i0.onrender.com/question?unit=${unit}`);
+let data=await res.json();
 
-document.getElementById("word").innerText = data.word;
-correct = data.correct;
+document.getElementById("word").innerText=data.word;
+correct=data.correct;
 
-let html = "";
+let html="";
 data.options.forEach(o=>{
-html += `<button class="option" onclick="check('${o}')">${o}</button>`;
+html+=`<button class="option" onclick="check('${o}')">${o}</button>`;
 });
 
-document.getElementById("options").innerHTML = html;
+document.getElementById("options").innerHTML=html;
 
 }else{
 
-let q = quizData[Math.floor(Math.random()*quizData.length)];
+let q=quizData[Math.floor(Math.random()*quizData.length)];
 
-document.getElementById("word").innerText = q.question;
-correct = q.correct;
+document.getElementById("word").innerText=q.question;
+correct=q.correct;
 
-let html = "";
+let html="";
 q.options.forEach(o=>{
-html += `<button class="option" onclick="check('${o}')">${o}</button>`;
+html+=`<button class="option" onclick="check('${o}')">${o}</button>`;
 });
 
-document.getElementById("options").innerHTML = html;
+document.getElementById("options").innerHTML=html;
 }
-
 }
 
 function check(a){
-
 if(a===correct){
 xp+=10;
 alert("Correct!");
 }else{
 alert("Wrong!");
 }
-
 document.getElementById("xp").innerText="XP: "+xp;
 setTimeout(loadQ,400);
 }
