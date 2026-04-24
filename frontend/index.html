@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>English Game</title>
+<title>CAHİT ARF English App</title>
 
 <style>
 
@@ -12,22 +12,18 @@ body{
     margin:0;
     font-family:Arial;
 
-    /* 🔴 NEW RED + WHITE PROFESSIONAL BACKGROUND */
-    background: linear-gradient(135deg, #ffffff 0%, #ffebee 45%, #ff5252 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #ffe5e5 40%, #ff4d4d 100%);
 
     display:flex;
     justify-content:center;
     align-items:center;
     height:100vh;
-    overflow:hidden;
 }
 
-/* 🔴 SOFT BACKGROUND DECORATION */
+/* subtle background glow */
 body::before{
     content:"";
     position:fixed;
-    top:0;
-    left:0;
     width:100%;
     height:100%;
     background:
@@ -46,7 +42,7 @@ body::before{
 }
 
 .title{
-    font-size:22px;
+    font-size:20px;
     font-weight:bold;
     color:#b30000;
 }
@@ -63,41 +59,32 @@ body::before{
     width:100%;
     display:flex;
     justify-content:center;
-    pointer-events:none;
     opacity:0.10;
     z-index:1;
-    animation: floatLogo 6s ease-in-out infinite;
+    pointer-events:none;
 }
 
 .logo-bg img{
-    width:340px;
-    filter: blur(0.7px);
-}
-
-@keyframes floatLogo{
-    0%{transform:translateY(0px); opacity:0.08;}
-    50%{transform:translateY(-12px); opacity:0.12;}
-    100%{transform:translateY(0px); opacity:0.08;}
+    width:300px;
 }
 
 /* CARD */
 .card{
     background:white;
-    padding:25px;
-    border-radius:20px;
     width:380px;
+    padding:20px;
+    border-radius:18px;
     text-align:center;
-    box-shadow:0 20px 40px rgba(0,0,0,0.2);
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+    z-index:10;
     max-height:90vh;
     overflow:auto;
-    position:relative;
-    z-index:10;
 }
 
 .word{
-    font-size:22px;
-    margin:20px 0;
+    font-size:20px;
     font-weight:bold;
+    margin:15px 0;
 }
 
 button.option{
@@ -105,21 +92,22 @@ button.option{
     padding:12px;
     margin:6px 0;
     border:none;
-    border-radius:12px;
+    border-radius:10px;
     background:#f3f3f3;
     cursor:pointer;
+    transition:0.2s;
 }
 
 button.option:hover{
-    background:#ff5252;
+    background:#ff4d4d;
     color:white;
 }
 
 .top{
     display:flex;
     justify-content:space-between;
-    gap:5px;
     flex-wrap:wrap;
+    gap:6px;
 }
 
 select{
@@ -129,7 +117,7 @@ select{
 
 .xp{
     margin-top:10px;
-    color:#ff5252;
+    color:#ff4d4d;
     font-weight:bold;
 }
 
@@ -144,62 +132,40 @@ select{
 .exam-btn{
     padding:12px;
     border:none;
-    border-radius:12px;
-    background:#ff5252;
+    border-radius:10px;
+    background:#ff4d4d;
     color:white;
     font-weight:bold;
     cursor:pointer;
 }
 
-.exam-btn:hover{
-    background:#c62828;
-}
-
-/* 📱 MOBILE FIX */
+/* MOBILE */
 @media (max-width:768px){
 
     body{
         align-items:flex-start;
-        padding-top:90px;
-        overflow:auto;
-    }
-
-    .header{
-        position:relative;
-        top:0;
-        margin-bottom:10px;
-    }
-
-    .title{
-        font-size:18px;
-    }
-
-    .subtitle{
-        font-size:11px;
-    }
-
-    .logo-bg{
-        top:-180px;
-        opacity:0.06;
-    }
-
-    .logo-bg img{
-        width:220px;
+        padding-top:80px;
     }
 
     .card{
         width:92%;
         padding:15px;
-        border-radius:15px;
+    }
+
+    .logo-bg{
+        top:-160px;
+    }
+
+    .logo-bg img{
+        width:200px;
+    }
+
+    .title{
+        font-size:16px;
     }
 
     .word{
         font-size:18px;
-    }
-
-    button.option{
-        font-size:14px;
-        padding:10px;
     }
 
     .exam-grid{
@@ -215,11 +181,11 @@ select{
 
 <div class="header">
     <div class="title">CAHİT ARF EĞİTİM KURUMLARI</div>
-    <div class="subtitle">This app is produced by Ali Kousha</div>
+    <div class="subtitle">Produced by Ali Kousha</div>
 </div>
 
 <div class="logo-bg">
-    <img src="logo.png" alt="logo">
+    <img src="logo.png">
 </div>
 
 <div class="card">
@@ -255,7 +221,7 @@ select{
 
 <div id="examSection" style="display:none;margin-top:15px;">
 
-<h3>📄 LGS Exams</h3>
+<h3>LGS Exams</h3>
 
 <div class="exam-grid">
 
@@ -276,16 +242,16 @@ select{
 
 <script>
 
-let correct = "";
-let xp = 0;
+let correct="";
+let xp=0;
 
-const quizData = [
+const quizData=[
 {question:"She ____ to school every day.",options:["go","goes","going","gone"],correct:"goes"},
 {question:"I ____ my homework yesterday.",options:["do","did","done","doing"],correct:"did"},
 {question:"They ____ playing football now.",options:["is","are","was","be"],correct:"are"}
 ];
 
-const examLinks = {
+const examLinks={
 "2018":"https://odsgm.meb.gov.tr/meb_iys_dosyalar/2018_06/03153730_SYZEL_BYLYM_A_kitapYY.pdf",
 "2019":"https://www.meb.gov.tr/meb_iys_dosyalar/2019_06/02125953_2019_SOZEL_BOLUM.pdf",
 "2020":"https://www.meb.gov.tr/meb_iys_dosyalar/2020_06/21195531_2020_sozel_bolum_a.pdf",
@@ -297,7 +263,7 @@ const examLinks = {
 };
 
 function openExam(y){
-window.open(examLinks[y], "_blank");
+window.open(examLinks[y],"_blank");
 }
 
 async function loadQ(){
@@ -308,7 +274,7 @@ document.getElementById("examSection").style.display=
 (mode==="exams")?"block":"none";
 
 if(mode==="exams"){
-document.getElementById("word").innerText="Select exam 👇";
+document.getElementById("word").innerText="Select exam";
 document.getElementById("options").innerHTML="";
 return;
 }
@@ -354,7 +320,7 @@ alert("Correct!");
 alert("Wrong!");
 }
 document.getElementById("xp").innerText="XP: "+xp;
-setTimeout(loadQ,400);
+setTimeout(loadQ,300);
 }
 
 function switchMode(){
