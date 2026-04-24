@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>English Game</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background: radial-gradient(circle at top,#58cc02,#1e1e2f);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    overflow:hidden;
+}
+
+/* HEADER (TOP LAYER) */
+.header{
+    position:absolute;
+    top:15px;
+    text-align:center;
+    width:100%;
+    z-index:5;
+}
+
+.title{
+    font-size:22px;
+    font-weight:bold;
+    color:white;
+}
+
+.subtitle{
+    font-size:12px;
+    color:#e0e0e0;
+}
+
+/* LOGO (FIXED: HIGH + BEHIND HEADER BUT ABOVE BACKGROUND) */
+.logo-bg{
+    position:absolute;
+    top:-120px;   /* 🔥 VERY HIGH NOW */
+    width:100%;
+    display:flex;
+    justify-content:center;
+    pointer-events:none;
+
+    opacity:0.10;
+    z-index:1;   /* above background */
+    animation: floatLogo 6s ease-in-out infinite;
+}
+
+.logo-bg img{
+    width:340px;
+    filter: blur(0.7px);
+}
+
+/* FLOAT ANIMATION */
+@keyframes floatLogo{
+    0%   { transform: translateY(0px); opacity:0.08; }
+    50%  { transform: translateY(-12px); opacity:0.12; }
+    100% { transform: translateY(0px); opacity:0.08; }
+}
+
+/* CARD (ON TOP OF EVERYTHING) */
+.card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    width:380px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+    max-height:90vh;
+    overflow:auto;
+
+    position:relative;
+    z-index:10;   /* 🔥 ALWAYS ABOVE LOGO */
+}
+
+.word{
+    font-size:22px;
+    margin:20px 0;
+    font-weight:bold;
+}
+
+button.option{
+    width:100%;
+    padding:12px;
+    margin:6px 0;
+    border:none;
+    border-radius:12px;
+    background:#f3f3f3;
+    cursor:pointer;
+}
+
+button.option:hover{
+    background:#58cc02;
+    color:white;
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    gap:5px;
+    flex-wrap:wrap;
+}
+
+select{
+    padding:6px;
+    border-radius:8px;
+}
+
+.xp{
+    margin-top:10px;
+    color:#58cc02;
+    font-weight:bold;
+}
+
+/* EXAM GRID */
+.exam-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:15px;
+}
+
+.exam-btn{
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    background:#2ecc71;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.exam-btn:hover{
+    background:#27ae60;
+    transform:scale(1.05);
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="title">CAHİT ARF EĞİTİM KURUMLARI</div>
+    <div class="subtitle">This app is produced by Ali Kousha</div>
+</div>
+
+<!-- LOGO (NOW HIGH & FIXED) -->
+<div class="logo-bg">
+    <img src="logo.png" alt="logo">
+</div>
+
+<!-- CARD -->
+<div class="card">
+
+<div class="top">
+
+<select id="mode" onchange="switchMode()">
+<option value="practice">Practice</option>
+<option value="quiz">Quiz</option>
+<option value="exams">LGS Exams</option>
+</select>
+
+<select id="unit" onchange="loadQ()">
+<option value="1">Unit 1</option>
+<option value="2">Unit 2</option>
+<option value="3">Unit 3</option>
+<option value="4">Unit 4</option>
+<option value="5">Unit 5</option>
+<option value="6">Unit 6</option>
+<option value="7">Unit 7</option>
+<option value="8">Unit 8</option>
+<option value="9">Unit 9</option>
+<option value="10">Unit 10</option>
+</select>
+
+</div>
+
+<div class="word" id="word">Loading...</div>
+
+<div id="options"></div>
+
+<div class="xp" id="xp">XP: 0</div>
+
+<div id="examSection" style="display:none;margin-top:15px;">
+
+<h3>📄 LGS Exams</h3>
+
+<div class="exam-grid">
+
+<button class="exam-btn" onclick="openExam('2018')">2018</button>
+<button class="exam-btn" onclick="openExam('2019')">2019</button>
+<button class="exam-btn" onclick="openExam('2020')">2020</button>
+<button class="exam-btn" onclick="openExam('2021')">2021</button>
+<button class="exam-btn" onclick="openExam('2022')">2022</button>
+<button class="exam-btn" onclick="openExam('2023')">2023</button>
+<button class="exam-btn" onclick="openExam('2024')">2024</button>
+<button class="exam-btn" onclick="openExam('2025')">2025</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let correct = "";
+let xp = 0;
+
+const quizData = [
+{
+question: "She ____ to school every day.",
+options: ["go", "goes", "going", "gone"],
+correct: "goes"
+},
+{
+question: "I ____ my homework yesterday.",
+options: ["do", "did", "done", "doing"],
+correct: "did"
+},
+{
+question: "They ____ playing football now.",
+options: ["is", "are", "was", "be"],
+correct: "are"
+}
+];
+
+const examLinks = {
+"2018":"https://odsgm.meb.gov.tr/meb_iys_dosyalar/2018_06/03153730_SYZEL_BYLYM_A_kitapYY.pdf",
+"2019":"https://www.meb.gov.tr/meb_iys_dosyalar/2019_06/02125953_2019_SOZEL_BOLUM.pdf",
+"2020":"https://www.meb.gov.tr/meb_iys_dosyalar/2020_06/21195531_2020_sozel_bolum_a.pdf",
+"2021":"https://cdn.eba.gov.tr/icerik/lgs/2021_SOZEL_BOLUM_A_.pdf",
+"2022":"https://cdn.eba.gov.tr/icerik/lgs/2022_sozel_bolum_a_kitapcigi_ve_cevap_anahtari.pdf",
+"2023":"https://msyo.meb.k12.tr/meb_iys_dosyalar/61/02/727852/dosyalar/2023_06/05095005_2023-LGS-SOZEL-KITAPCIGI.pdf",
+"2024":"https://msyo.meb.k12.tr/meb_iys_dosyalar/61/02/727852/dosyalar/2024_06/03121642_2024sozelakitapcik.pdf",
+"2025":"https://hasanunlukahramanoo.meb.k12.tr/meb_iys_dosyalar/79/01/976865/dosyalar/2025_10/28084845_2025sozel.pdf"
+};
+
+function openExam(y){
+window.open(examLinks[y], "_blank");
+}
+
+async function loadQ(){
+
+let mode = document.getElementById("mode").value;
+
+document.getElementById("examSection").style.display =
+(mode === "exams") ? "block" : "none";
+
+if(mode === "exams"){
+document.getElementById("word").innerText = "Select exam 👇";
+document.getElementById("options").innerHTML = "";
+return;
+}
+
+if(mode === "practice"){
+
+let unit = document.getElementById("unit").value;
+
+let res = await fetch(`http://127.0.0.1:8000/question?unit=${unit}`);
+let data = await res.json();
+
+document.getElementById("word").innerText = data.word;
+correct = data.correct;
+
+let html = "";
+data.options.forEach(o=>{
+html += `<button class="option" onclick="check('${o}')">${o}</button>`;
+});
+
+document.getElementById("options").innerHTML = html;
+
+}else{
+
+let q = quizData[Math.floor(Math.random()*quizData.length)];
+
+document.getElementById("word").innerText = q.question;
+correct = q.correct;
+
+let html = "";
+q.options.forEach(o=>{
+html += `<button class="option" onclick="check('${o}')">${o}</button>`;
+});
+
+document.getElementById("options").innerHTML = html;
+}
+
+}
+
+function check(a){
+
+if(a===correct){
+xp+=10;
+alert("Correct!");
+}else{
+alert("Wrong!");
+}
+
+document.getElementById("xp").innerText="XP: "+xp;
+setTimeout(loadQ,400);
+}
+
+function switchMode(){
+xp=0;
+document.getElementById("xp").innerText="XP: 0";
+loadQ();
+}
+
+loadQ();
+
+</script>
+
+</body>
+</html>
