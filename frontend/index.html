@@ -4,15 +4,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CAHİT ARF English App</title>
+<title>Cahit Arf English App</title>
 
 <style>
 
+/* 🌈 BASE */
 body{
     margin:0;
-    font-family:Arial;
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
 
-    background: linear-gradient(135deg, #ffffff 0%, #ffe5e5 40%, #ff4d4d 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #ffe6e6 40%, #ff4d4d 100%);
 
     display:flex;
     justify-content:center;
@@ -20,7 +21,7 @@ body{
     height:100vh;
 }
 
-/* subtle background glow */
+/* glow background */
 body::before{
     content:"";
     position:fixed;
@@ -43,7 +44,7 @@ body::before{
 
 .title{
     font-size:20px;
-    font-weight:bold;
+    font-weight:700;
     color:#b30000;
 }
 
@@ -61,48 +62,57 @@ body::before{
     justify-content:center;
     opacity:0.10;
     z-index:1;
-    pointer-events:none;
 }
 
 .logo-bg img{
     width:300px;
 }
 
-/* CARD */
+/* 🧊 GLASS CARD (BIG UPGRADE) */
 .card{
-    background:white;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.4);
+
     width:380px;
-    padding:20px;
-    border-radius:18px;
+    padding:22px;
+    border-radius:24px;
+
     text-align:center;
-    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+    box-shadow:0 25px 60px rgba(0,0,0,0.25);
+
     z-index:10;
     max-height:90vh;
     overflow:auto;
 }
 
+/* WORD */
 .word{
-    font-size:20px;
-    font-weight:bold;
-    margin:15px 0;
+    font-size:22px;
+    font-weight:700;
+    margin:18px 0;
 }
 
+/* 🔘 OPTIONS (DUOLINGO STYLE) */
 button.option{
     width:100%;
-    padding:12px;
-    margin:6px 0;
+    padding:14px;
+    margin:7px 0;
     border:none;
-    border-radius:10px;
-    background:#f3f3f3;
+    border-radius:14px;
+    background:#f5f5f5;
     cursor:pointer;
-    transition:0.2s;
+    transition:0.25s;
+    font-size:15px;
 }
 
 button.option:hover{
-    background:#ff4d4d;
+    background: linear-gradient(135deg,#ff4d4d,#ff1a1a);
     color:white;
+    transform:scale(1.02);
 }
 
+/* TOP SELECT */
 .top{
     display:flex;
     justify-content:space-between;
@@ -115,10 +125,28 @@ select{
     border-radius:8px;
 }
 
+/* XP SYSTEM */
 .xp{
     margin-top:10px;
     color:#ff4d4d;
     font-weight:bold;
+}
+
+/* XP BAR (NEW) */
+.bar{
+    width:100%;
+    height:8px;
+    background:#eee;
+    border-radius:10px;
+    margin-top:10px;
+    overflow:hidden;
+}
+
+.bar-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#ff4d4d,#ff0000);
+    transition:0.3s;
 }
 
 /* EXAMS */
@@ -132,32 +160,33 @@ select{
 .exam-btn{
     padding:12px;
     border:none;
-    border-radius:10px;
+    border-radius:12px;
     background:#ff4d4d;
     color:white;
     font-weight:bold;
-    cursor:pointer;
 }
 
-/* MOBILE */
+/* ANIMATIONS */
+.correct{
+    animation:pop 0.3s ease;
+}
+
+@keyframes pop{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.1);}
+    100%{transform:scale(1);}
+}
+
+/* 📱 MOBILE */
 @media (max-width:768px){
 
     body{
         align-items:flex-start;
-        padding-top:80px;
+        padding-top:70px;
     }
 
     .card{
-        width:92%;
-        padding:15px;
-    }
-
-    .logo-bg{
-        top:-160px;
-    }
-
-    .logo-bg img{
-        width:200px;
+        width:94%;
     }
 
     .title{
@@ -165,7 +194,7 @@ select{
     }
 
     .word{
-        font-size:18px;
+        font-size:19px;
     }
 
     .exam-grid{
@@ -216,6 +245,8 @@ select{
 <div class="word" id="word">Loading...</div>
 
 <div id="options"></div>
+
+<div class="bar"><div class="bar-fill" id="bar"></div></div>
 
 <div class="xp" id="xp">XP: 0</div>
 
@@ -313,12 +344,21 @@ document.getElementById("options").innerHTML=html;
 }
 
 function check(a){
+
+let bar=document.getElementById("bar");
+
 if(a===correct){
 xp+=10;
+bar.style.width=xp+"%";
+
+document.body.classList.add("correct");
+setTimeout(()=>document.body.classList.remove("correct"),300);
+
 alert("Correct!");
 }else{
 alert("Wrong!");
 }
+
 document.getElementById("xp").innerText="XP: "+xp;
 setTimeout(loadQ,300);
 }
@@ -326,6 +366,7 @@ setTimeout(loadQ,300);
 function switchMode(){
 xp=0;
 document.getElementById("xp").innerText="XP: 0";
+document.getElementById("bar").style.width="0%";
 loadQ();
 }
 
